@@ -52,7 +52,13 @@ PARTITIONED BY (
 )
 STORED AS PARQUET;
 
--- NOTE: there are many params we would not want to count distinct values of
+-- NOTE: there are many params we do not want to count distinct values of
 -- at all (eg maxlag, smaxage, maxage, requestid, origin, centralauthtoken,
--- titles, pageids). It will be easier to whitelist in the ETL process
--- than to try and selectively blacklist.
+-- titles, pageids). Rather than trying to make an extensive blacklist and
+-- potentially allow new parameters to slip through which have high
+-- cardinality or sensitive information, the ETL process will use a whatlist
+-- approach to count params that have been deemed to be useful.
+--
+-- The initial whitelist is (query, prop), (query, list), (query, meta),
+-- (flow, module), (*, generator). The prop, list and meta parameters will
+-- additionally be split on '|' with each component counted separately.
