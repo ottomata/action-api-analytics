@@ -17,7 +17,7 @@
 --
 
 ADD JAR /srv/deployment/analytics/refinery/artifacts/refinery-hive.jar;
-CREATE TEMPORARY FUNCTION network_origin as 'org.wikimedia.analytics.refinery.hive.NetworkOriginUDF';
+CREATE TEMPORARY FUNCTION network_origin AS 'org.wikimedia.analytics.refinery.hive.NetworkOriginUDF';
 
 INSERT INTO TABLE action_ua_hourly
 PARTITION(year=${year}, month=${month}, day=${day}, hour=${hour})
@@ -25,7 +25,7 @@ SELECT
     userAgent,
     wiki,
     network_origin(ip),
-    COUNT(*)
+    COUNT(1)
 FROM wmf_raw.ApiAction
 WHERE year = ${year}
   AND month = ${month}

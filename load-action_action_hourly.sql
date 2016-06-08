@@ -17,7 +17,7 @@
 --
 
 ADD JAR /srv/deployment/analytics/refinery/artifacts/refinery-hive.jar;
-CREATE TEMPORARY FUNCTION network_origin as 'org.wikimedia.analytics.refinery.hive.NetworkOriginUDF';
+CREATE TEMPORARY FUNCTION network_origin AS 'org.wikimedia.analytics.refinery.hive.NetworkOriginUDF';
 
 INSERT INTO TABLE action_action_hourly
 PARTITION(year=${year}, month=${month}, day=${day}, hour=${hour})
@@ -25,7 +25,7 @@ SELECT
     COALESCE(params['action'], 'help') action,
     wiki,
     network_origin(ip) ipClass,
-    COUNT(*) viewCount
+    COUNT(1) viewCount
 FROM wmf_raw.ApiAction
 WHERE year = ${year}
   AND month = ${month}

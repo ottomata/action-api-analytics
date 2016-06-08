@@ -31,7 +31,7 @@ SELECT
   prop AS value,
   wiki,
   network_origin(ip) ipClass,
-  COUNT(*) viewCount
+  COUNT(1) viewCount
 FROM
   wmf_raw.ApiAction
   LATERAL VIEW EXPLODE(SPLIT(params['${param}'], '\\|')) props as prop
