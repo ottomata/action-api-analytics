@@ -1,0 +1,5 @@
+SHELL=/bin/bash
+MAILTO=bdavis@wikimedia.org
+
+# m h  dom mon dow   command
+11 3 * * * /home/bd808/projects/action-api/daily-apiaction-load.sh
