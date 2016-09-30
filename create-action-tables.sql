@@ -56,7 +56,7 @@ STORED AS PARQUET;
 -- at all (eg maxlag, smaxage, maxage, requestid, origin, centralauthtoken,
 -- titles, pageids). Rather than trying to make an extensive blacklist and
 -- potentially allow new parameters to slip through which have high
--- cardinality or sensitive information, the ETL process will use a whatlist
+-- cardinality or sensitive information, the ETL process will use a whitelist
 -- approach to count params that have been deemed to be useful.
 --
 -- The initial whitelist is (query, prop), (query, list), (query, meta),
