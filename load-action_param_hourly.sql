@@ -25,17 +25,17 @@ SELECT
   COALESCE(params['action'], 'help') action,
   pTable.key AS param,
   pTable.value AS value,
-  wiki,
-  network_origin(ip) ipClass,
+  `database` AS wiki,
+  network_origin(http.client_ip) AS ipClass,
   COUNT(1) viewCount
 FROM
-  wmf_raw.ApiAction
+  event.mediawiki_api_request
   LATERAL VIEW EXPLODE(params) pTable AS key, value
 WHERE year = ${year}
   AND month = ${month}
   AND day = ${day}
   AND hour = ${hour}
-  AND hadError = false
+  AND (api_error_codes IS NULL OR size(api_error_codes) = 0)
   AND (
     (params['action'] = 'flow' AND pTable.key = 'submodule')
     OR pTable.key = 'generator'
@@ -44,6 +44,6 @@ GROUP BY
   COALESCE(params['action'], 'help'),
   pTable.key,
   pTable.value,
-  wiki,
-  network_origin(ip)
+  `database`,
+  network_origin(http.client_ip)
 ;

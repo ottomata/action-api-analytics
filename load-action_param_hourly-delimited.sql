@@ -29,21 +29,22 @@ SELECT
   params['action'] AS action,
   '${param}' AS param,
   prop AS value,
-  wiki,
-  network_origin(ip) ipClass,
-  COUNT(1) viewCount
+  `database` AS wiki,
+  network_origin(http.client_ip) AS ipClass,
+  COUNT(1) AS viewCount
 FROM
-  wmf_raw.ApiAction
+  event.mediawiki_api_request
   LATERAL VIEW EXPLODE(SPLIT(params['${param}'], '\\|')) props as prop
 WHERE year = ${year}
   AND month = ${month}
   AND day = ${day}
   AND hour = ${hour}
-  AND hadError = false
+  AND (api_error_codes IS NULL OR size(api_error_codes) = 0)
   AND params['action'] = '${action}'
 GROUP BY
   params['action'],
   prop,
-  wiki,
-  network_origin(ip)
+  `database`,
+  network_origin(http.client_ip)
+limit 100
 ;

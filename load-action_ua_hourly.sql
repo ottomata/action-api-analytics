@@ -22,17 +22,17 @@ CREATE TEMPORARY FUNCTION network_origin AS 'org.wikimedia.analytics.refinery.hi
 INSERT INTO TABLE action_ua_hourly
 PARTITION(year=${year}, month=${month}, day=${day}, hour=${hour})
 SELECT
-    userAgent,
-    wiki,
-    network_origin(ip),
+    http.request_headers['user-agent'] AS userAgent,
+    `database` AS wiki,
+    network_origin(http.client_ip) AS ip,
     COUNT(1)
-FROM wmf_raw.ApiAction
+FROM event.mediawiki_api_request
 WHERE year = ${year}
   AND month = ${month}
   AND day = ${day}
   AND hour = ${hour}
 GROUP BY
-    userAgent,
-    wiki,
-    network_origin(ip)
+    http.request_headers['user-agent'],
+    `database`,
+    network_origin(http.client_ip)
 ;

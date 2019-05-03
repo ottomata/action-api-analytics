@@ -23,16 +23,16 @@ INSERT INTO TABLE action_action_hourly
 PARTITION(year=${year}, month=${month}, day=${day}, hour=${hour})
 SELECT
     COALESCE(params['action'], 'help') action,
-    wiki,
-    network_origin(ip) ipClass,
+    `database` AS wiki,
+    network_origin(http.client_ip) AS ipClass,
     COUNT(1) viewCount
-FROM wmf_raw.ApiAction
+FROM event.mediawiki_api_request
 WHERE year = ${year}
   AND month = ${month}
   AND day = ${day}
   AND hour = ${hour}
 GROUP BY
     COALESCE(params['action'], 'help'),
-    wiki,
-    network_origin(ip)
+    `database`,
+    network_origin(http.client_ip)
 ;
